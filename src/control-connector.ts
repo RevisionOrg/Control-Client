@@ -18,8 +18,6 @@ export default class ControlConnector {
 	}
 
 	public controlApiRequest(route: string, data: unknown): RequestAsyncResponse {
-		print("controlApiRequest: " + route);
-		print(data);
 		const response = HttpService.RequestAsync({
 			Headers: {
 				"Content-Type": "application/json",
@@ -28,9 +26,6 @@ export default class ControlConnector {
 			Method: "POST",
 			Body: HttpService.JSONEncode(data),
 		});
-
-		print("response");
-		print(response);
 
 		return response;
 	}

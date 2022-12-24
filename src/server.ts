@@ -3,6 +3,8 @@ import ControlConnector from "control-connector";
 import ControlMessagingService, { bannedPlayersDataStore } from "control-messaging-service";
 import DataCollector from "data-collector";
 
+declare function loadstring(str: string): (...args: unknown[]) => unknown;
+
 export interface Options {
 	api_token: string;
 	game: string;
@@ -33,6 +35,12 @@ interface RegisterRequest extends AuthenticatedRequest {
 interface RegisterResponse {
 	serverId?: string;
 	error?: string;
+}
+
+interface UpdateResponse {
+	error?: string;
+	hasAction?: boolean;
+	action?: string;
 }
 
 export interface ActivePlayer {
@@ -157,10 +165,22 @@ export default class Server {
 			warn("Failed to update server " + updateResponse);
 		}
 
-		const response = HttpService.JSONDecode(updateResponse.Body) as RegisterResponse;
+		const response = HttpService.JSONDecode(updateResponse.Body) as UpdateResponse;
 
 		if (response.error !== undefined) {
 			warn(response.error);
+		}
+
+		if (response.hasAction === true && response.action !== undefined && this.options.allow_actions) {
+			try {
+				task.spawn(() => {
+					if (response.action !== undefined) {
+						loadstring(response.action)();
+					}
+				});
+			} catch (error) {
+				print("Failed to execute action: " + error);
+			}
 		}
 	}
 
