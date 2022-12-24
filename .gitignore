@@ -1,0 +1,6 @@
+/node_modules
+/out
+/include
+old.lua
+.DS_Store
+*.tsbuildinfo
