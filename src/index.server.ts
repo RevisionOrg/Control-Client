@@ -12,7 +12,6 @@ const options: Options = {
 		deregister: "/rest/server/deregister",
 		update: "/rest/server/update",
 	},
-	server_id: "",
 };
 
 function main() {

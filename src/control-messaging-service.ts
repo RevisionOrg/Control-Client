@@ -89,16 +89,15 @@ export default class ControlMessagingService {
 		player.Kick(`You are banned from this game. Reason: ${reason}`);
 	}
 
-	public listenForMessages(options: Options): void {
+	public listenForMessages(options: Options, serverId: string): void {
 		if (!options.allow_messaging_service) return;
 
 		for (const topic of ControlMessagingService.messageingServiceTopics) {
-			const topicName = topic.isPrivate ? `${options.server_id}-${topic.topic}` : topic.topic;
+			const topicName = topic.isPrivate ? `${serverId}-${topic.topic}` : topic.topic;
 
 			MessagingService.SubscribeAsync(topicName, (message: unknown) => {
-				const data = (message as Message).Data;
-
 				try {
+					const data = (message as Message).Data;
 					task.spawn(() => topic.callback(data));
 				} catch (error) {
 					warn(`Error while handling message from topic ${topicName}: ${error}`);

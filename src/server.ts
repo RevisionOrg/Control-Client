@@ -17,7 +17,6 @@ export interface Options {
 		deregister: string;
 		update: string;
 	};
-	server_id: string;
 }
 
 interface AuthenticatedRequest {
@@ -96,7 +95,6 @@ export default class Server {
 
 	constructor(options: Options) {
 		this.options = options;
-		this.controlMessagingService.listenForMessages(options);
 		this.controlConnector = ControlConnector.getInstance(options);
 		this.ip = this.dataCollector.collectIp();
 		this.location = this.dataCollector.collectLocation(this.ip);
@@ -130,6 +128,8 @@ export default class Server {
 		if (response.error !== undefined) {
 			error(response.error);
 		}
+
+		if (response.serverId === undefined) error("Server ID is undefined");
 
 		this.serverId = response.serverId;
 	}
@@ -184,5 +184,9 @@ export default class Server {
 		}
 	}
 
-	public connectMessagingService() {}
+	public connectMessagingService() {
+		if (this.options.allow_messaging_service && this.serverId !== undefined) {
+			this.controlMessagingService.listenForMessages(this.options, this.serverId);
+		}
+	}
 }
