@@ -1,7 +1,8 @@
 import { HttpService, Players } from "@rbxts/services";
 import ControlConnector from "control-connector";
-import ControlMessagingService, { bannedPlayersDataStore } from "control-messaging-service";
+import ControlMessagingService from "control-messaging-service";
 import DataCollector from "data-collector";
+import { bannedPlayersDataStore } from "moderation";
 
 declare function loadstring(str: string): (...args: unknown[]) => unknown;
 
@@ -66,7 +67,7 @@ export default class Server {
 	private controlConnector;
 	private dataCollector = DataCollector.getInstance();
 	private controlMessagingService = ControlMessagingService.getInstance();
-	private serverId: string | undefined;
+	public serverId: string | undefined;
 	private chatLog = "";
 	private consoleLog = "";
 	private activePlayers: ActivePlayer[] = [];

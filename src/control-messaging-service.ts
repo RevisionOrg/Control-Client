@@ -1,40 +1,26 @@
-import { DataStoreService, HttpService, MessagingService, Players } from "@rbxts/services";
+import { HttpService, MessagingService, Players } from "@rbxts/services";
+import { announceMessage, banPlayer, kickPlayer } from "moderation";
 import { Options } from "server";
-
-export const bannedPlayersDataStore = DataStoreService.GetDataStore("BannedPlayers");
 
 export interface Message {
 	[key: string]: unknown;
 }
 
-interface ChatSpeaker {
-	SendSystemMessage(message: string, channel: string): void;
-}
-
-interface ChatService {
-	GetSpeakerList(): Array<ChatSpeaker>;
-}
-
-export const ChatService = require(game
-	.GetService("ServerScriptService")
-	.WaitForChild("ChatServiceRunner")
-	.WaitForChild("ChatService") as ModuleScript) as ChatService;
-
 export default class ControlMessagingService {
 	private static instance: ControlMessagingService;
-	private static messageingServiceTopics = [
+	private static messagingServiceTopics = [
 		{
-			topic: "Annoucement",
+			topic: "Announcement",
 			isPrivate: false,
 			callback: (data: unknown) => {
-				this.announceMessage(data as string);
+				announceMessage(data as string);
 			},
 		},
 		{
 			topic: "KickPlayer",
 			isPrivate: true,
 			callback: (data: unknown) => {
-				const { userId, reason } = HttpService.JSONDecode((data as Message)["Data"] as string) as {
+				const { userId, reason } = HttpService.JSONDecode(data as string) as {
 					userId: string;
 					reason: string;
 				};
@@ -42,14 +28,14 @@ export default class ControlMessagingService {
 
 				if (userId === undefined || reason === undefined || player === undefined) return;
 
-				this.kickPlayer(player, reason);
+				kickPlayer(player, reason);
 			},
 		},
 		{
 			topic: "BanPlayer",
 			isPrivate: true,
 			callback: (data: unknown) => {
-				const { userId, reason } = HttpService.JSONDecode((data as Message)["Data"] as string) as {
+				const { userId, reason } = HttpService.JSONDecode(data as string) as {
 					userId: string;
 					reason: string;
 				};
@@ -57,7 +43,7 @@ export default class ControlMessagingService {
 
 				if (userId === undefined || reason === undefined || player === undefined) return;
 
-				this.banPlayer(player, reason);
+				banPlayer(player, reason);
 			},
 		},
 	];
@@ -70,34 +56,18 @@ export default class ControlMessagingService {
 		return ControlMessagingService.instance;
 	}
 
-	public static announceMessage(message: string): void {
-		if (ChatService === undefined) return;
-
-		const allChatSpeakers = ChatService.GetSpeakerList();
-
-		for (const speaker of allChatSpeakers) {
-			speaker.SendSystemMessage(`[ANNOUNCEMENT] ${message}`, "All");
-		}
-	}
-
-	public static kickPlayer(player: Player, reason: string): void {
-		player.Kick(`You have been kicked from this game. Reason: ${reason}`);
-	}
-
-	public static banPlayer(player: Player, reason: string): void {
-		bannedPlayersDataStore.SetAsync(tostring(player.UserId), reason);
-		player.Kick(`You are banned from this game. Reason: ${reason}`);
-	}
-
 	public listenForMessages(options: Options, serverId: string): void {
 		if (!options.allow_messaging_service) return;
 
-		for (const topic of ControlMessagingService.messageingServiceTopics) {
-			const topicName = topic.isPrivate ? `${serverId}-${topic.topic}` : topic.topic;
+		for (const topic of ControlMessagingService.messagingServiceTopics) {
+			const topicName = topic.isPrivate ? `${serverId}${topic.topic}` : topic.topic;
 
 			MessagingService.SubscribeAsync(topicName, (message: unknown) => {
 				try {
+					print(`Received message from topic ${topicName}: ${message}`);
+
 					const data = (message as Message).Data;
+
 					task.spawn(() => topic.callback(data));
 				} catch (error) {
 					warn(`Error while handling message from topic ${topicName}: ${error}`);

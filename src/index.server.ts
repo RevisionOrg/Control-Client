@@ -25,6 +25,8 @@ function main() {
 		server.deregister();
 	});
 
+	print(`Connected to Control. Server ID: ${server.serverId}`);
+
 	task.spawn(() => {
 		while (wait(options.update_interval)) {
 			try {
