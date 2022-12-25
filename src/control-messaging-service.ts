@@ -1,5 +1,5 @@
 import { HttpService, MessagingService, Players } from "@rbxts/services";
-import { announceMessage, banPlayer, kickPlayer } from "moderation";
+import { announceMessage, banPlayer, kickPlayer, shutdownServer } from "moderation";
 import { Options } from "server";
 
 export interface Message {
@@ -44,6 +44,14 @@ export default class ControlMessagingService {
 				if (userId === undefined || reason === undefined || player === undefined) return;
 
 				banPlayer(player, reason);
+			},
+		},
+		{
+			topic: "ShutdownServer",
+			isPrivate: true,
+			callback: () => {
+				warn("Server is shutting down.");
+				shutdownServer();
 			},
 		},
 	];

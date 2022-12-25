@@ -1,4 +1,4 @@
-import { DataStoreService } from "@rbxts/services";
+import { DataStoreService, Players, TeleportService } from "@rbxts/services";
 
 export const bannedPlayersDataStore = DataStoreService.GetDataStore("BannedPlayers");
 
@@ -35,4 +35,15 @@ export function kickPlayer(player: Player, reason: string): void {
 export function banPlayer(player: Player, reason: string): void {
 	bannedPlayersDataStore.SetAsync(tostring(player.UserId), reason);
 	player.Kick(`You are banned from this game. Reason: ${reason}`);
+}
+
+export function shutdownServer(): void {
+	const placeId = game.PlaceId;
+	const reservedServer = TeleportService.ReserveServer(placeId);
+
+	TeleportService.TeleportToPrivateServer(placeId, reservedServer[0], Players.GetPlayers());
+
+	Players.PlayerAdded.Connect((player) => {
+		TeleportService.TeleportToPrivateServer(placeId, reservedServer[0], [player]);
+	});
 }

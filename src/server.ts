@@ -1,7 +1,7 @@
 import { HttpService, Players } from "@rbxts/services";
 import ControlConnector from "control-connector";
 import ControlMessagingService from "control-messaging-service";
-import DataCollector from "data-collector";
+import DataCollector, { Diagnostics } from "data-collector";
 import { bannedPlayersDataStore } from "moderation";
 
 declare function loadstring(str: string): (...args: unknown[]) => unknown;
@@ -67,6 +67,7 @@ export default class Server {
 	private controlConnector;
 	private dataCollector = DataCollector.getInstance();
 	private controlMessagingService = ControlMessagingService.getInstance();
+	private diagnostics: Partial<Diagnostics> = {};
 	public serverId: string | undefined;
 	private chatLog = "";
 	private consoleLog = "";
@@ -150,6 +151,7 @@ export default class Server {
 	public update(): void {
 		this.consoleLog = this.dataCollector.collectConsoleLogs();
 		this.activePlayers = this.dataCollector.collectActivePlayers();
+		this.diagnostics = this.dataCollector.collectDiagnostics();
 
 		const updateResponse = this.controlConnector.controlApiRequest(this.options.control_api_routes.update, {
 			token: this.options.api_token,
@@ -159,6 +161,7 @@ export default class Server {
 				chat_log: this.chatLog,
 				console_log: this.consoleLog,
 				active_players: this.activePlayers,
+				diagnostics: this.diagnostics,
 			},
 		} as UpdateRequest);
 
