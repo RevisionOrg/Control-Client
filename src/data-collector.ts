@@ -1,4 +1,4 @@
-import { HttpService, LogService, Players } from "@rbxts/services";
+import { HttpService, LogService, Players, Stats } from "@rbxts/services";
 import { ActivePlayer } from "server";
 
 interface IPResponse {
@@ -7,6 +7,25 @@ interface IPResponse {
 
 interface LocationResponse {
 	country: string;
+}
+
+interface DiagnosticsEntry {
+	value: number;
+	health: "Healthy" | "Degraded" | "Unhealthy";
+}
+
+export interface Diagnostics {
+	contactsCount: DiagnosticsEntry;
+	dataReceiveKbps: DiagnosticsEntry;
+	dataSendKbps: DiagnosticsEntry;
+	heartbeatTimeMs: DiagnosticsEntry;
+	instanceCount: DiagnosticsEntry;
+	movingPrimitivesCount: DiagnosticsEntry;
+	physicsReceiveKbps: DiagnosticsEntry;
+	physicsSendKbps: DiagnosticsEntry;
+	physicsStepTimeMs: DiagnosticsEntry;
+	primitivesCount: DiagnosticsEntry;
+	totalMemoryUsageMb: DiagnosticsEntry;
 }
 
 export default class DataCollector {
@@ -55,5 +74,66 @@ export default class DataCollector {
 		const response = HttpService.GetAsync("http://ip-api.com/json/" + ip);
 
 		return (HttpService.JSONDecode(response) as LocationResponse).country;
+	}
+
+	public collectDiagnostics(): Diagnostics {
+		return {
+			instanceCount: {
+				value: Stats.InstanceCount,
+				health: Stats.InstanceCount > 10000 ? "Unhealthy" : Stats.InstanceCount > 7000 ? "Degraded" : "Healthy",
+			},
+			primitivesCount: {
+				value: Stats.PrimitivesCount,
+				health: "Healthy",
+			},
+			movingPrimitivesCount: {
+				value: Stats.MovingPrimitivesCount,
+				health:
+					Stats.MovingPrimitivesCount > 1000
+						? "Unhealthy"
+						: Stats.MovingPrimitivesCount > 500
+						? "Degraded"
+						: "Healthy",
+			},
+			contactsCount: {
+				value: Stats.ContactsCount,
+				health:
+					Stats.ContactsCount > 100000 ? "Unhealthy" : Stats.ContactsCount > 50000 ? "Degraded" : "Healthy",
+			},
+			physicsStepTimeMs: {
+				value: Stats.PhysicsStepTimeMs,
+				health:
+					Stats.PhysicsStepTimeMs > 10 ? "Unhealthy" : Stats.PhysicsStepTimeMs > 6 ? "Degraded" : "Healthy",
+			},
+			physicsSendKbps: {
+				value: Stats.PhysicsSendKbps,
+				health: "Healthy",
+			},
+			physicsReceiveKbps: {
+				value: Stats.PhysicsReceiveKbps,
+				health: "Healthy",
+			},
+			dataSendKbps: {
+				value: Stats.DataSendKbps,
+				health: "Healthy",
+			},
+			dataReceiveKbps: {
+				value: Stats.DataReceiveKbps,
+				health: "Healthy",
+			},
+			heartbeatTimeMs: {
+				value: Stats.HeartbeatTimeMs,
+				health: "Healthy",
+			},
+			totalMemoryUsageMb: {
+				value: Stats.GetTotalMemoryUsageMb(),
+				health:
+					Stats.GetTotalMemoryUsageMb() > 4000
+						? "Unhealthy"
+						: Stats.GetTotalMemoryUsageMb() > 3000
+						? "Degraded"
+						: "Healthy",
+			},
+		};
 	}
 }
