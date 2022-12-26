@@ -1,0 +1,33 @@
+# Github worklfow that runs an ubuntu job to build and release the project when pushed to production
+
+name: Release
+
+on:
+    push:
+        branches:
+            - production
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+              name: Checkout code
+            - uses: ok-nick/setup-aftman@v0.3.0
+              name: Install aftman
+            - uses: actions/setup-node@v3
+              name: Install node
+              with:
+                  node-version: "18"
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: latest
+            - name: Install dependencies
+              run: pnpm install && aftman install
+            - name: Build
+              run: mkdir -p out && pnpm transpile && pnpm build
+            - name: Upload build
+              uses: actions/upload-artifact@v3
+              with:
+                  name: Control-Client
+                  path: out/Control-Client.rbxm

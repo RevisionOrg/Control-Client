@@ -5,8 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"transpile": "rbxtsc",
-		"build": "rojo build -o out/Control-Client.rbxm",
-		"watch": "rbxtsc -w"
+		"build": "rojo build -o out/Control-Client.rbxm"
 	},
 	"keywords": [],
 	"author": "",
