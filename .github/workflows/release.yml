@@ -23,7 +23,7 @@ jobs:
               with:
                   version: latest
             - name: Install dependencies
-              run: pnpm install && aftman install
+              run: pnpm install && aftman install && pnpm install -g roblox-ts
             - name: Build
               run: mkdir -p out && pnpm transpile && pnpm build
             - name: Upload build
