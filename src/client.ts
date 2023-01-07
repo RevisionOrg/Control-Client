@@ -1,9 +1,9 @@
 import Server, { Options } from "server";
 
 const options: Options = {
-	api_token: "",
-	game: "",
-	control_api_url: "",
+	api_token: "CONTROL_API_TOKEN",
+	game: "CONTROL_GAME_ID",
+	control_api_url: "CONTROL_API_URL",
 	allow_actions: true,
 	allow_messaging_service: true,
 	update_interval: 30,

@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@rbxts/compiler-types': 2.0.4-types.1
+  '@rbxts/roact': 1.4.4-ts.0
   '@rbxts/services': ^1.5.1
   '@rbxts/types': ^1.0.654
   '@typescript-eslint/eslint-plugin': ^5.46.1
@@ -16,6 +17,7 @@ specifiers:
   typescript: ^4.9.4
 
 dependencies:
+  '@rbxts/roact': 1.4.4-ts.0
   '@rbxts/services': 1.5.1
 
 devDependencies:
@@ -95,6 +97,10 @@ packages:
   /@rbxts/compiler-types/2.0.4-types.1:
     resolution: {integrity: sha512-sLFiyMH9j8kcCd07lt6R+WgneksCGqYUFKu7qX02ufUU7r9eR2dXoOt2A9Nxh3unTuCu5mYyO0M6JYb82fOHxA==}
     dev: true
+
+  /@rbxts/roact/1.4.4-ts.0:
+    resolution: {integrity: sha512-gn9mBoGG/Clzgv2kyOvLNVd9dh5t6z+jukC3ITv2HnfPqvf/sMbz/VMaBoiB7t5umuiIe0LjW0ctZrkrS+uTOA==}
+    dev: false
 
   /@rbxts/services/1.5.1:
     resolution: {integrity: sha512-SRtfIjga0K4YYSXRpK+eH3kcTq7ZXo9OHOt0jszaOOoEOIJloMGlyuRPqesPHyhveh2AMXAZr3TYbRMSD+u+kQ==}

@@ -4,3 +4,5 @@
 old.lua
 .DS_Store
 *.tsbuildinfo
+
+.buildt
