@@ -76,9 +76,9 @@ export default class Server {
 	private ip = "";
 
 	private processPlayer(player: Player) {
-		const isBanned = bannedPlayersDataStore.GetAsync(tostring(player.UserId));
+		const isBanned = bannedPlayersDataStore.GetAsync(tostring(player.UserId))[0];
 
-		if (isBanned && typeIs(isBanned, "string")) {
+		if (isBanned !== undefined && typeIs(isBanned, "string")) {
 			player.Kick(`You are banned from this game. Reason: ${tostring(isBanned)}`);
 
 			return;
