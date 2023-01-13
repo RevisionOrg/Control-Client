@@ -6,7 +6,7 @@ const options: Options = {
 	control_api_url: "CONTROL_API_URL",
 	allow_actions: true,
 	allow_messaging_service: true,
-	update_interval: 30,
+	update_interval: 120,
 	control_api_routes: {
 		register: "/rest/server/register",
 		deregister: "/rest/server/deregister",
