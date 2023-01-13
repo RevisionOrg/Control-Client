@@ -18,7 +18,6 @@ function main() {
 	const server = new Server(options);
 
 	server.register();
-	server.update();
 	server.connectMessagingService();
 
 	game.BindToClose(() => {
@@ -26,6 +25,8 @@ function main() {
 	});
 
 	print(`Connected to Control. Server ID: ${server.serverId}`);
+
+	server.update();
 
 	task.spawn(() => {
 		while (wait(options.update_interval)) {

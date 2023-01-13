@@ -80,7 +80,8 @@ export default class DataCollector {
 		return {
 			instanceCount: {
 				value: Stats.InstanceCount,
-				health: Stats.InstanceCount > 10000 ? "Unhealthy" : Stats.InstanceCount > 7000 ? "Degraded" : "Healthy",
+				health:
+					Stats.InstanceCount > 10000000 ? "Unhealthy" : Stats.InstanceCount > 7000 ? "Degraded" : "Healthy",
 			},
 			primitivesCount: {
 				value: Stats.PrimitivesCount,
