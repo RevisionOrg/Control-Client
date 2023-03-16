@@ -23,7 +23,7 @@
 		"nodemon": "^2.0.20",
 		"prettier": "^2.8.1",
 		"roblox-ts": "^2.0.4",
-		"typescript": "^4.9.4"
+		"typescript": "^5.0.0"
 	},
 	"dependencies": {
 		"@rbxts/roact": "1.4.4-ts.0",
