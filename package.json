@@ -18,7 +18,7 @@
 		"@typescript-eslint/parser": "^5.46.1",
 		"eslint": "^8.30.0",
 		"eslint-config-prettier": "^8.5.0",
-		"eslint-plugin-prettier": "^4.2.1",
+		"eslint-plugin-prettier": "^5.0.0",
 		"eslint-plugin-roblox-ts": "^0.0.35",
 		"nodemon": "^2.0.20",
 		"prettier": "^2.8.1",
